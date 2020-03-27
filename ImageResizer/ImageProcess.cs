@@ -117,9 +117,10 @@ namespace ImageResizer {
         public void ParallelResizeImages(string sourcePath, string destPath, double scale) {
             //Write($"尋找 [{sourcePath}] 中的所有圖片...");
             var allFiles = FindImages(sourcePath);
-            //Write($"尋找完畢.");
             //Write($"開始逐一處理圖片...");
-            Parallel.ForEach(allFiles, (filePath) => {
+
+            Parallel.For(0, allFiles.Count, (i) => {
+                string filePath = allFiles[i];
                 Image imgPhoto = Image.FromFile(filePath);
 
                 int sourceWidth = imgPhoto.Width;
