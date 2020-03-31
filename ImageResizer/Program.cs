@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageResizer {
@@ -18,6 +19,21 @@ namespace ImageResizer {
         private static long origSpan = 1;
 
         private static void Main(string[] args) {
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            #region 等候使用者輸入 取消 c 按鍵
+
+            ThreadPool.QueueUserWorkItem(x => {
+                ConsoleKeyInfo key = Console.ReadKey();
+                if (key.Key == ConsoleKey.C) {
+                    cts.Cancel();
+                } else {
+                    Console.WriteLine(key.Key);
+                }
+            });
+
+            #endregion 等候使用者輸入 取消 c 按鍵
+
             ImageProcess _imageProcess = new ImageProcess();
 
             // 設定來源資料夾及目標資料夾
@@ -27,33 +43,33 @@ namespace ImageResizer {
             // 清除目標資料夾
             _imageProcess.Clean(destinationPath);
 
-            ImageProcess.Write("default(origSpan): " + GetExecutionTime(Task.Run(() => {
-                _imageProcess.ParallelResizeImages(sourcePath, destinationPath, 2.0);
-            })));
-            //imageProcess.ParallelResizeImages(sourcePath, destinationPath, 2.0);
+            // 進行可取消的非同步圖片縮放作業
+            _imageProcess.ResizeImagesAsync(sourcePath, destinationPath, 2.0, cts.Token).Wait();
+
+            #region 改善效能
 
             // 新版程式
-            ImageProcess.Write($"平行處理縮放圖片...");
-            newSpan = GetExecutionTime(Task.Run(() => {
-                _imageProcess.ParallelResizeImages(sourcePath, destinationPath, 2.0);
-            }));
+            //ImageProcess.Write($"平行處理縮放圖片...");
+            //CancellationTokenSource ctsUser = new CancellationTokenSource();
+            //newSpan = GetTaskExecutionTime(_imageProcess.ResizeImagesAsync(sourcePath, destinationPath, 2.0, cts.Token));
+            //ImageProcess.Write("平行處理圖片完畢.");
 
-            ImageProcess.Write("平行處理圖片完畢.");
+            //// 清除目標資料夾
+            //_imageProcess.Clean(destinationPath);
 
-            // 清除目標資料夾
-            _imageProcess.Clean(destinationPath);
-
-            // 原版程式
-            ImageProcess.Write($"原版縮放圖片程式...");
-            origSpan = GetExecutionTime(Task.Run(() => {
-                _imageProcess.ResizeImages(sourcePath, destinationPath, 2.0);
-            }));
-            ImageProcess.Write("處理圖片完畢.");
+            //// 原版程式
+            //ImageProcess.Write($"原版縮放圖片程式...");
+            //origSpan = GetTaskExecutionTime(Task.Run(() => {
+            //    _imageProcess.ResizeImages(sourcePath, destinationPath, 2.0);
+            //}));
+            //ImageProcess.Write("處理圖片完畢.");
 
             // 計算並印出此次結果
-            Console.WriteLine($"New: {newSpan} ms");
-            Console.WriteLine($"Orig: {origSpan} ms");
-            Console.WriteLine(string.Format("效能提升比例: {0:00.0}%", ((double)origSpan - newSpan) / origSpan * 100));
+            //Console.WriteLine($"New: {newSpan} ms");
+            //Console.WriteLine($"Orig: {origSpan} ms");
+            //Console.WriteLine(string.Format("效能提升比例: {0:00.0}%", ((double)origSpan - newSpan) / origSpan * 100));
+
+            #endregion 改善效能
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
@@ -69,10 +85,12 @@ namespace ImageResizer {
         /// </summary>
         /// <param name="task"></param>
         /// <returns>time(ms)</returns>
-        private static long GetExecutionTime(Task task) {
+        private static long GetTaskExecutionTime(Task task) {
             Stopwatch sw = new Stopwatch();
             sw.Start();
+            Console.WriteLine("start");
             task.Wait();
+            Console.WriteLine("stop");
             sw.Stop();
             return sw.ElapsedMilliseconds;
         }

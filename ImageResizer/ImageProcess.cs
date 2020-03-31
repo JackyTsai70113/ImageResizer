@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,7 +61,7 @@ namespace ImageResizer {
         }
 
         /// <summary>
-        /// 進行圖片的縮放作業
+        /// 圖片縮放作業
         /// </summary>
         /// <param name="sourcePath">圖片來源目錄路徑</param>
         /// <param name="destPath">產生圖片目的目錄路徑</param>
@@ -109,38 +105,82 @@ namespace ImageResizer {
         }
 
         /// <summary>
-        /// [平行計算] 進行圖片的縮放作業
+        /// 非同步圖片縮放作業
         /// </summary>
         /// <param name="sourcePath">圖片來源目錄路徑</param>
         /// <param name="destPath">產生圖片目的目錄路徑</param>
         /// <param name="scale">縮放比例</param>
-        public void ParallelResizeImages(string sourcePath, string destPath, double scale) {
-            //Write($"尋找 [{sourcePath}] 中的所有圖片...");
+        /// <returns>非同步圖片縮放Task</returns>
+        public Task ResizeImagesAsync(string sourcePath, string destPath, double scale) {
+            return ResizeImagesAsync(sourcePath, destPath, scale, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// 可取消的非同步圖片縮放作業
+        /// </summary>
+        /// <param name="sourcePath">圖片來源目錄路徑</param>
+        /// <param name="destPath">產生圖片目的目錄路徑</param>
+        /// <param name="scale">縮放比例</param>
+        /// <param name="token">取消權杖</param>
+        /// <returns></returns>
+        public Task ResizeImagesAsync(string sourcePath, string destPath, double scale, CancellationToken token) {
             var allFiles = FindImages(sourcePath);
-            //Write($"開始逐一處理圖片...");
+            List<Task> tasks = new List<Task>();
+            foreach (var filePath in allFiles) {
+                tasks.Add(Task.Run(() => {
+                    ResizeImage(filePath, destPath, scale, ref token);
+                }));
+            }
+            Task whenAll = Task.WhenAll(tasks.ToArray());
+            while (true) {
+                if (token.IsCancellationRequested) {
+                    // 工作已取消
+                    Clean(destPath);
+                    return Task.CompletedTask;
+                } else if (whenAll.Status == TaskStatus.RanToCompletion) {
+                    //工作已完成
+                    return Task.CompletedTask;
+                } else {
+                    Console.Write(".");
+                    Thread.Sleep(500);
+                }
+            }
+        }
 
-            Parallel.For(0, allFiles.Count, (i) => {
-                string filePath = allFiles[i];
-                Image imgPhoto = Image.FromFile(filePath);
+        /// <summary>
+        /// 單張圖片縮放作業
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="destPath"></param>
+        /// <param name="scale"></param>
+        /// <param name="token"></param>
+        private void ResizeImage(string filePath, string destPath, double scale, ref CancellationToken token) {
+            CancellationToken cancellationToken = token;
+            Image imgPhoto = Image.FromFile(filePath);
 
-                int sourceWidth = imgPhoto.Width;
-                int sourceHeight = imgPhoto.Height;
+            int sourceWidth = imgPhoto.Width;
+            int sourceHeight = imgPhoto.Height;
 
-                int destionatonWidth = (int)(sourceWidth * scale);
-                int destionatonHeight = (int)(sourceHeight * scale);
+            int destionatonWidth = (int)(sourceWidth * scale);
+            int destionatonHeight = (int)(sourceHeight * scale);
 
-                #region 30~80ms
+            // 若取消工作則直接回傳
+            if (cancellationToken.IsCancellationRequested) {
+                return;
+            }
 
-                Bitmap bitmap = ProcessBitmap((Bitmap)imgPhoto,
-                    sourceWidth, sourceHeight,
-                    destionatonWidth, destionatonHeight);
+            Bitmap bitmap = ProcessBitmap((Bitmap)imgPhoto,
+                sourceWidth, sourceHeight,
+                destionatonWidth, destionatonHeight);
 
-                #endregion 30~80ms
+            // 若取消工作則直接回傳
+            if (cancellationToken.IsCancellationRequested) {
+                return;
+            }
 
-                string imgName = Path.GetFileNameWithoutExtension(filePath);
-                string destFile = Path.Combine(destPath, imgName + ".jpg");
-                bitmap.Save(destFile, ImageFormat.Jpeg);
-            });
+            string imgName = Path.GetFileNameWithoutExtension(filePath);
+            string destFile = Path.Combine(destPath, imgName + ".jpg");
+            bitmap.Save(destFile, ImageFormat.Jpeg);
         }
 
         /// <summary>
