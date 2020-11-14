@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageResizer", "ImageResize
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadAsyncOutput", "ThreadAsyncOutput\ThreadAsyncOutput.csproj", "{67756FA3-57A8-4828-BFD8-52DFD5CAD76B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadSafe", "ThreadSafe\ThreadSafe.csproj", "{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{67756FA3-57A8-4828-BFD8-52DFD5CAD76B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67756FA3-57A8-4828-BFD8-52DFD5CAD76B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67756FA3-57A8-4828-BFD8-52DFD5CAD76B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
