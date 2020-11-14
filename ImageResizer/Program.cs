@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,6 +34,9 @@ namespace ImageResizer {
             });
 
             #endregion 等候使用者輸入 取消 c 按鍵
+
+            Task.Factory.StartNew(Test2);
+            //Test2();
 
             ImageProcess _imageProcess = new ImageProcess();
 
@@ -78,6 +82,19 @@ namespace ImageResizer {
             // 2. 請紀錄修改前與修改後的效能改善幅度(百分比)
             // 3. 完成後請貼上連結與告知效能提升百分比
             // 4. 效能提升比例公式：(Orig - New) / Orig
+        }
+
+        private static Task<string> Test() {
+            Task<string> task = Task.Run(() => {
+                ImageProcess.Write("This is my string.");
+                return "sssssssss";
+            });
+            return task;
+        }
+
+        private static string Test2() {
+            Console.Write("12346579");
+            return "TEST2TEST2";
         }
 
         /// <summary>
