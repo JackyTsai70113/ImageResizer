@@ -5,9 +5,17 @@ VisualStudioVersion = 16.0.30524.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageResizer", "ImageResizer\ImageResizer.csproj", "{E4E9420F-F12B-481B-A397-D9AE07513405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadAsyncOutput", "ThreadAsyncOutput\ThreadAsyncOutput.csproj", "{67756FA3-57A8-4828-BFD8-52DFD5CAD76B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.AsyncThread", "ThreadAsyncOutput\1.AsyncThread.csproj", "{67756FA3-57A8-4828-BFD8-52DFD5CAD76B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadSafe", "ThreadSafe\ThreadSafe.csproj", "{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.ThreadSafety", "ThreadSafe\3.ThreadSafety.csproj", "{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2.AsyncTask", "AsyncTask\2.AsyncTask.csproj", "{06B9EDA0-FEBF-48AB-926A-CB7B5AD6BA0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4.TaskWaitMethod", "TaskWaitMethod\4.TaskWaitMethod.csproj", "{1B6791EC-3506-419E-BBC1-007642E039DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5.FireAndForgetTask", "FireAndForgetTask\5.FireAndForgetTask.csproj", "{84AF4ADE-2194-40D7-9272-2F32411F6309}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "6.MakePizzaByTask", "MakePizzaByTask\6.MakePizzaByTask.csproj", "{248DBD5A-5ABF-4AAC-8FE4-389188730F4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +35,22 @@ Global
 		{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D71D5576-349B-4A2F-81E1-92F2E9C81D9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B9EDA0-FEBF-48AB-926A-CB7B5AD6BA0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B9EDA0-FEBF-48AB-926A-CB7B5AD6BA0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B9EDA0-FEBF-48AB-926A-CB7B5AD6BA0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B9EDA0-FEBF-48AB-926A-CB7B5AD6BA0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B6791EC-3506-419E-BBC1-007642E039DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B6791EC-3506-419E-BBC1-007642E039DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B6791EC-3506-419E-BBC1-007642E039DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B6791EC-3506-419E-BBC1-007642E039DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84AF4ADE-2194-40D7-9272-2F32411F6309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84AF4ADE-2194-40D7-9272-2F32411F6309}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84AF4ADE-2194-40D7-9272-2F32411F6309}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84AF4ADE-2194-40D7-9272-2F32411F6309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{248DBD5A-5ABF-4AAC-8FE4-389188730F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{248DBD5A-5ABF-4AAC-8FE4-389188730F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{248DBD5A-5ABF-4AAC-8FE4-389188730F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{248DBD5A-5ABF-4AAC-8FE4-389188730F4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
